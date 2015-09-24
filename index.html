@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div id="page">
+            <div id="buttons">
+                <input id="folderh" type="file" webkitdirectory hidden>
+                <input id="folder" type="button" class="button" value="Add folder">
+                <input id="filesh" type="file" multiple accept=".wav" hidden>
+                <input id="files" type="button" class="button" value="Add files">
+                <input id="remove" type="button" class="button" value="Remove files" disabled>
+                <input id="savelog" type="button" class="button" value="Save log">
+                <div id="dropdown">
+                    <input id="threads" type="button" class="button">
+                    <ul id="threadlist"></ul>
+                </div>
+                <input id="pause" type="button" class="button" value="Pause">
+                <input id="website" type="button" class="button" value="Website">
+            </div>
+            <div id="welcome"><span>Drag &amp; drop folders/files here.</span></div>
+            <div id="header" hidden>
+                <div id="resizer" draggable="true"></div>
+                <table class="table">
+                    <thead class="table-head">
+                        <tr>
+                            <th><input id="checkall" type="checkbox"></th>
+                            <th>File</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="container" hidden>
+                <table class="table">
+                    <tbody id="list" class="table-body"></tbody>
+                </table>
+            </div>
+            <div id="filter" hidden>
+                <ul>
+                    <li><a id="checked" class="active">Checked<span id="checkedh" class="badge">0</span></a></li>
+                    <li><a id="clean">Clean<span id="cleanh" class="badge">0</span></a></li>
+                    <li><a id="transcoded">Transcoded<span id="transcodedh" class="badge">0</span></a></li>
+                    <li><a id="upscaled">Upscaled<span id="upscaledh" class="badge">0</span></a></li>
+                    <li><a id="upsampled">Upsampled<span id="upsampledh" class="badge">0</span></a></li>
+                    <li><a id="error">Error<span id="errorh" class="badge">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+        <style id="resizerstyle">
+            .table-head > tr > th:nth-child(2) {
+                width: 70%; }
+            .table-body > tr > td:nth-child(2) {
+                width: 70%; }
+            #resizer {
+                left: calc((100% - 17px) * 0.7 + 30px); }
+        </style>
+        <script src="js/taskswatcher.js"></script>
+        <script src="js/lac.js"></script>
+    </body>
+</html>

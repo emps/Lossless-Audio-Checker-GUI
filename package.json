@@ -1,0 +1,13 @@
+{
+    "main": "/index.html",
+    "name": "Lossless Audio Checker",
+    "version": "2.0",
+    "window": {
+        "icon": "/images/logo.png",
+        "toolbar": false,
+        "width": 680,
+        "height": 360,
+        "min_width": 483,
+        "min_height": 100
+    }
+}
