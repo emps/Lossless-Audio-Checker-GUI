@@ -32,10 +32,12 @@ class TasksWatcher {
         }
         else {
             maxThreads = ++this.lastThread + maxThreads - length;
+            let string;
             for ( ; this.lastThread != maxThreads; this.lastThread++) {
-                this.threads[this.lastThread.toString()] = null;
+                string               = this.lastThread.toString();
+                this.threads[string] = null;
                 if (!this.paused && this.currentTask < this.queue.length - 1)
-                    this.doTask(this.lastThread.toString(), this.queue[++this.currentTask]);
+                    this.doTask(string, this.queue[++this.currentTask]);
             }
         }
     }
