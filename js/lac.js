@@ -356,7 +356,7 @@ savelog.addEventListener('click', function() {
     let length   = children.length;
     let i;
     for (i = 0; i != length; i++)
-        log += '\r\n\r\nFile:   ' + children[i].firstElementChild.innerText + '\r\nResult: ' + children[i].lastElementChild.innerText + '\r\n\r\n';
+        log += '\r\n\r\nFile:   ' + children[i].children[1].innerText + '\r\nResult: ' + children[i].lastElementChild.innerText;
 
     children = filter.firstElementChild.children;
     length   = children.length;
