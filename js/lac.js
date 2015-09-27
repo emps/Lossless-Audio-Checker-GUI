@@ -124,7 +124,6 @@ function preventEvent(e) {
 welcome.addEventListener('dragover', dragOverEvent, false);
 container.addEventListener('dragover', dragOverEvent, false);
 
-
 function dragOverEvent() {
     if (!headerDragging)
         this.className = 'dragover';
