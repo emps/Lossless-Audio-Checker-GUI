@@ -12,7 +12,7 @@ const results = [
     'WAVE Header FMT Block: Bad ByteRate',
     'WAVE Header FMT Block: Bad BlockAlign',
     'WAVE Header FMT Block: Bad Bits/Sample',
-  //'WAVE Header FMT Block: Bad Extension Size',
+    'WAVE Header FMT Block: Bad Extension Size',
     'WAVE Header EXTENSIBLE Block: Bad Size',
     'WAVE Header EXTENSIBLE Block: Bad Bits/Sample',
     'WAVE Header EXTENSIBLE Block: Bad Format Code',
@@ -25,7 +25,7 @@ const results = [
     'Upscaled',
     'Upsampled'
 ];
-const finalError   = 17;
+const finalError   = 18;
 const path         = require('path');
 const gui          = require('nw.gui');
 const fs           = require('fs');
