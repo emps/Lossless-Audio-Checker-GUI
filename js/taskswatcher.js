@@ -45,13 +45,13 @@ class TasksWatcher {
     doTask(thread, object) {
         object['status']     = thread;
         this.threads[thread] = spawn(this.executable, [object['path']]);
-        this.threads[thread].stdout.on('data', (function(obj) {
-            return function(data) {
+        this.threads[thread].stdout.on('data', (function (obj) {
+            return function (data) {
                 obj.onData(data, object['UIindex']);
             };
         })(this));
-        this.threads[thread].on('close', (function(obj) {
-            return function(code) {
+        this.threads[thread].on('close', (function (obj) {
+            return function (code) {
                 if (!this.killed) {
                     object['status'] = 'done';
                     obj.tasksDone++;
