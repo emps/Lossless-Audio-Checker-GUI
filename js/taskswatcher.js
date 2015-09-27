@@ -1,6 +1,6 @@
 'use strict';
 
-var spawn = require('child_process').spawn;
+const spawn = require('child_process').spawn;
 
 class TasksWatcher {
     constructor(maxThreads, executable, objectProperty, onData, onClose) {

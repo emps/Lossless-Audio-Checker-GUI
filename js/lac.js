@@ -1,10 +1,6 @@
 'use strict';
 
-var path         = require('path');
-var gui          = require('nw.gui');
-var fs           = require('fs');
-var appName      = gui.App.manifest.name + ' ' + gui.App.manifest.version;
-var results      = [
+const results = [
     'Incorrect file path',
     'Not a WAVE file',
     'WAVE Header RIFF Block: Bad ID',
@@ -29,7 +25,11 @@ var results      = [
     'Upscaled',
     'Upsampled'
 ];
-var finalError     = 17;
+const finalError   = 17;
+const path         = require('path');
+const gui          = require('nw.gui');
+const fs           = require('fs');
+const appName      = gui.App.manifest.name + ' ' + gui.App.manifest.version;
 var lastClick      = -1;
 var headerDragging = false;
 var tasksWatcher;
@@ -328,12 +328,12 @@ upsampled.addEventListener('click', filterList, false);
 error.addEventListener('click', filterList, false);
 
 function filterList(e) {
-    let filterElement                                      = e.currentTarget;
-    let filterElementId                                    = filterElement.id;
-    let children                                           = list.children;
-    let length                                             = children.length;
-    filter.getElementsByClassName('active')[0].className   = '';
-    filterElement.className                                = 'active';
+    let filterElement                                    = e.currentTarget;
+    let filterElementId                                  = filterElement.id;
+    let children                                         = list.children;
+    let length                                           = children.length;
+    filter.getElementsByClassName('active')[0].className = '';
+    filterElement.className                              = 'active';
     if (filterElementId == 'checked') {
         checkall.hidden = false;
         for (let i = 0; i != length; i++)
