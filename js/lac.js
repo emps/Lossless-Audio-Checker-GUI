@@ -30,8 +30,10 @@ const path         = require('path');
 const gui          = require('nw.gui');
 const fs           = require('fs');
 const appName      = gui.App.manifest.name + ' ' + gui.App.manifest.version;
+const win          = gui.Window.get();
 var lastClick      = -1;
 var headerDragging = false;
+var isFocused      = true;
 var tasksWatcher;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
@@ -40,15 +42,15 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = document.getElementById(tmp);
 }
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     document.title = appName;
 
     let maxThreads = require('os').cpus().length;
     for (let i = maxThreads; i != 0; i--) {
         let li       = document.createElement('li');
         li.innerHTML = '<input type="button" value="' + i + '">';
-        li.addEventListener('click', (function(_i) {
-            return function() {
+        li.addEventListener('click', (function (_i) {
+            return function () {
                 threads.value = 'Threads: ' + _i;
                 tasksWatcher.updateThreads(_i);
             };
@@ -62,14 +64,13 @@ window.addEventListener('load', function() {
     tasksWatcher   = new TasksWatcher(
         maxThreads,
         path.resolve(process.cwd(), 'LAC'),
-        'path',
-        function(data, UIindex) {
+        function (data, UIindex) {
             let progress = document.getElementById('progress' + UIindex);
             if (progress == null)
                 document.getElementById('result' + UIindex).innerHTML = '<div class="progress"><span class="progress-bar"><span id="progress' + UIindex + '"class="progress-in" style="width: ' + data.length * 2 + '%"></span></span></div>';
             else progress.style.width = (parseInt(progress.style.width.split('%')[0]) + data.length * 2) + '%';
         },
-        function(code, UIindex) {
+        function (code, UIindex, progress) {
             let tr                        = document.getElementById(UIindex);
             let result                    = results[code];
             tr.className                  = code > finalError ? result.toLowerCase() : 'error';
@@ -81,19 +82,23 @@ window.addEventListener('load', function() {
             let badge          = document.getElementById(tr.className + 'h');
             badge.innerHTML    = (parseInt(badge.innerHTML) + 1);
             checkedh.innerHTML = (parseInt(checkedh.innerHTML) + 1);
+
+            win.setProgressBar(progress);
+            if (progress == 1 && !isFocused)
+                win.requestAttention(true);
         }
     );
 }, false);
 
-folder.addEventListener('click', function() {
+folder.addEventListener('click', function () {
     folderh.click();
 }, false);
 
-files.addEventListener('click', function() {
+files.addEventListener('click', function () {
     filesh.click();
 }, false);
 
-folderh.addEventListener('change', function(e) {
+folderh.addEventListener('change', function (e) {
     let acceptedFiles = [];
     parseFiles(e.target.files[0].path.replace(/\\/, '/'), acceptedFiles);
 
@@ -101,7 +106,7 @@ folderh.addEventListener('change', function(e) {
     checkFiles(acceptedFiles);
 }, false);
 
-filesh.addEventListener('change', function(e) {
+filesh.addEventListener('change', function (e) {
     let acceptedFiles = [];
     let files         = e.target.files;
     for (let i = 0, filesLength = files.length; i != filesLength; i++) {
@@ -160,21 +165,21 @@ function dropEvent(e) {
     }
 }
 
-window.addEventListener('resize', function(e) {
+window.addEventListener('resize', function (e) {
     resize((window.innerWidth - 17) * 0.7 + 30);
 }, false);
 
-resizer.addEventListener('dragstart', function(e) {
+resizer.addEventListener('dragstart', function (e) {
     headerDragging = true;
     e.dataTransfer.effectAllowed = 'link';
     e.dataTransfer.setData('Text', '');
 }, false);
 
-resizer.addEventListener('drag', function(e) {
+resizer.addEventListener('drag', function (e) {
     resize(e.screenX - window.screenX);
 }, false);
 
-resizer.addEventListener('dragend', function(e) {
+resizer.addEventListener('dragend', function (e) {
     resize(e.screenX - window.screenX);
     headerDragging = false;
 }, false);
@@ -224,11 +229,11 @@ function checkFiles(acceptedFiles) {
 
     let i, tr;
     for (i = 0; i != length; i++) {
-        tasksWatcher.addTask({ 'path': acceptedFiles[i] }, function(UIindex) {
+        tasksWatcher.addTask(acceptedFiles[i], function (UIindex, progress) {
             tr           = document.createElement('tr');
             tr.id        = UIindex;
             tr.innerHTML = '<td><input id="check' + UIindex + '" type="checkbox"' + (checkall.checked ? ' checked' : '') + '></td><td>' + acceptedFiles[i] + '</td><td id="result' + UIindex + '"></td>';
-            tr.firstElementChild.firstElementChild.addEventListener('click', function(e) {
+            tr.firstElementChild.firstElementChild.addEventListener('click', function (e) {
                 let value       = e.target.checked;
                 let lastElement = document.getElementById(lastClick);
                 if (e.shiftKey && lastElement != null) {
@@ -247,6 +252,8 @@ function checkFiles(acceptedFiles) {
             }, false);
             tr.firstElementChild.firstElementChild.addEventListener('change', reflectChanged, false);
             list.appendChild(tr);
+
+            win.setProgressBar(progress);
         });
     }
 }
@@ -276,11 +283,13 @@ function reflectChanged(e) {
     else checkall.checked = false;
 }
 
-remove.addEventListener('click', function() {
+remove.addEventListener('click', function () {
     let children = list.children;
     for (let i = children.length - 1; i != -1; i--) {
         if (children[i].firstElementChild.firstElementChild.checked) {
-            tasksWatcher.removeTask(children[i].id);
+            tasksWatcher.removeTask(children[i].id, function (progress) {
+                win.setProgressBar(progress);
+            });;
             if (children[i].className != '') {
                 let badge          = document.getElementById(children[i].className + 'h');
                 badge.innerHTML    = (parseInt(badge.innerHTML) - 1);
@@ -299,7 +308,7 @@ remove.addEventListener('click', function() {
     remove.disabled  = true;
 }, false);
 
-checkall.addEventListener('change', function(e) {
+checkall.addEventListener('change', function (e) {
     let checked  = e.target.checked;
     let children = list.children;
     let length   = children.length;
@@ -308,7 +317,7 @@ checkall.addEventListener('change', function(e) {
     remove.disabled = !checked;
 }, false);
 
-pause.addEventListener('click', function(e) {
+pause.addEventListener('click', function (e) {
     let element = e.target;
     if (element.value == 'Pause') {
         tasksWatcher.pauseTasks();
@@ -349,7 +358,7 @@ function filterList(e) {
     }
 }
 
-savelog.addEventListener('click', function() {
+savelog.addEventListener('click', function () {
     let a        = document.createElement('a');
     let log      = appName + ' logfile from ' + (new Date).toGMTString();
     let children = list.children;
@@ -370,6 +379,20 @@ savelog.addEventListener('click', function() {
     window.URL.revokeObjectURL(a.href);
 }, false);
 
-website.addEventListener('click', function() {
+website.addEventListener('click', function () {
     gui.Shell.openExternal('http://losslessaudiochecker.com');
 });
+
+win.on('close', function () {
+    if (tasksWatcher.isIdle() || confirm(appName + ' is still working. Close anyway?'))
+        this.close(true);
+});
+
+window.addEventListener('focus', function () {
+    win.requestAttention(false);
+    isFocused = true;
+}, false);
+
+window.addEventListener('blur', function () {
+    isFocused = false;
+}, false);
