@@ -360,6 +360,7 @@ function filterList(e) {
 
 savelog.addEventListener('click', function () {
     let a        = document.createElement('a');
+    a.download   = appName + '.log';
     let log      = appName + ' logfile from ' + (new Date).toGMTString();
     let children = list.children;
     let length   = children.length;
@@ -373,8 +374,7 @@ savelog.addEventListener('click', function () {
     for (i = 1; i != length; i++)
         log += ' | ' + children[i].firstElementChild.innerText.replace(/([0-9]+)$/, ': $1');
 
-    a.href     = window.URL.createObjectURL(new Blob([log + '\r\n'], { 'type': 'application/octet-stream' }));
-    a.download = appName + '.log';
+    a.href = window.URL.createObjectURL(new Blob([log + '\r\n'], { 'type': 'application/octet-stream' }));
     a.click();
     window.URL.revokeObjectURL(a.href);
 }, false);
