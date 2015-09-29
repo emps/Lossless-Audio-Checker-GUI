@@ -49,12 +49,11 @@ window.addEventListener('load', function () {
     for (let i = maxThreads; i != 0; i--) {
         let li       = document.createElement('li');
         li.innerHTML = '<input type="button" value="' + i + '">';
-        li.addEventListener('click', (function (_i) {
-            return function () {
-                threads.value = 'Threads: ' + _i;
-                tasksWatcher.updateThreads(_i);
-            };
-        })(i), false);
+        li.addEventListener('click', function (e) {
+            let value     = e.target.value;
+            threads.value = 'Threads: ' + value;
+            tasksWatcher.updateThreads(parseInt(value));
+        }, false);
         threadlist.appendChild(li);
     }
 
