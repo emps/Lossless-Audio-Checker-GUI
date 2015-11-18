@@ -4,16 +4,16 @@ const spawn = require('child_process').spawn;
 
 class TasksWatcher {
     constructor(maxThreads, executable, onData, onClose) {
-        this.paused         = false;
-        this.queue          = [];
-        this.threads        = {};
-        this.currentTask    = -1;
-        this.lastUIindex    = -1;
-        this.lastThread     = -1;
-        this.tasksDone      = 0;
-        this.executable     = executable;
-        this.onData         = onData;
-        this.onClose        = onClose;
+        this.paused      = false;
+        this.queue       = [];
+        this.threads     = {};
+        this.currentTask = -1;
+        this.lastUIindex = -1;
+        this.lastThread  = -1;
+        this.tasksDone   = 0;
+        this.executable  = executable;
+        this.onData      = onData;
+        this.onClose     = onClose;
         this.updateThreads(maxThreads);
     }
     updateThreads(maxThreads) {
