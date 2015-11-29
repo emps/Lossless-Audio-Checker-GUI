@@ -3,7 +3,7 @@
     "name": "Lossless Audio Checker",
     "version": "2.0",
     "window": {
-        "icon": "/images/logo.png",
+        "icon": "/img/logo.png",
         "toolbar": false,
         "width": 680,
         "height": 360,
