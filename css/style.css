@@ -4,17 +4,14 @@ html, body, div, span, a, ul, li, table, thead, tbody {
     border: 0;
     font-size: 100%;
     font: inherit;
-}
+    vertical-align: baseline; }
 
 body {
     cursor: default;
     -webkit-user-select: none;
-    background-color: #F5F5F5;
+    font: 12px/20px 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
     color: #404040;
-    font-family: 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 12px;
-    font-weight: normal;
-    line-height: 20px; }
+    background: #F5F5F5; }
 
 a {
     text-decoration: none;
@@ -257,6 +254,7 @@ input[type=checkbox] {
 .table-body > tr:hover {
     background: #f3f3f3; }
 .table-body > tr > td {
+    vertical-align: top;
     overflow: hidden;
     text-overflow: ellipsis;
     border-right: 1px solid transparent;
